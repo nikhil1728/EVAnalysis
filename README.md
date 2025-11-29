@@ -1,5 +1,5 @@
-# 🚲 Yulu Electric Cycle Demand Analysis  
-## Hypothesis Testing & Statistical Analysis
+<h1 align="center"># 🚲 Yulu Electric Cycle Demand Analysis  
+<h1 align="center">## Hypothesis Testing & Statistical Analysis
 
 ---
 
