@@ -1,179 +1,148 @@
-# 🚲 Yulu Bike Sharing – Hypothesis Testing & EDA
-
-## 📌 Project Overview
-This project analyzes **Yulu’s shared electric cycle demand** using **exploratory data analysis (EDA)** and **hypothesis testing**.  
-The goal is to understand which factors (season, weather, working day, etc.) significantly impact the **number of rentals (`count`)** and how they relate to each other.
+# 🚲 Yulu Electric Cycle Demand Analysis  
+## Hypothesis Testing & Statistical Analysis
 
 ---
 
-## 🎯 Business Objective
-Yulu wants to know:
+## 🔍 Problem Background
+Yulu, India’s leading micro-mobility platform, has observed a **decline in revenue** and wants to understand the key factors influencing the **demand for shared electric cycles**.
 
-1. **Which variables significantly affect the demand** for shared electric cycles.
-2. **How well these variables explain the variation in demand**.
-
-This project focuses on:
-- Working day vs non-working day impact  
-- Seasonal and weather impact on rentals  
-- Relationship between season and weather
+The company is particularly interested in knowing:
+- Which variables significantly affect demand
+- Whether demand patterns vary across **working days, seasons, and weather conditions**
+- How well these factors explain rental behavior in the Indian market
 
 ---
 
-## 🗂 Dataset Description
-
-- **Rows:** 10,886  
-- **Columns:** 12 (original), with additional engineered categorical bins  
-- **Granularity:** Hourly rental data  
-- **Period Covered:** 2011-01-01 00:00:00 to 2012-12-19 23:00:00  
-
-### Main Columns
-
-| Column       | Description                                                                            |
-|-------------|----------------------------------------------------------------------------------------|
-| `datetime`  | Date & time of observation (hourly)                                                    |
-| `season`    | Season (1: Spring, 2: Summer, 3: Fall, 4: Winter)                                      |
-| `holiday`   | 1 if day is a holiday, else 0                                                          |
-| `workingday`| 1 if day is a working day (not weekend/holiday), else 0                                |
-| `weather`   | 1–4, from clear to heavy rain/snow                                                     |
-| `temp`      | Temperature in °C                                                                      |
-| `atemp`     | “Feels like” temperature in °C                                                         |
-| `humidity`  | Humidity (%)                                                                           |
-| `windspeed` | Wind speed                                                                            |
-| `casual`    | Number of casual (non-registered) users                                                |
-| `registered`| Number of registered users                                                             |
-| `count`     | Total rentals (`casual + registered`)                                                  |
-
-🔹 No missing values were found in the core dataset.  
-🔹 Additional binned categorical features were created:
-
-- `wind_bins` → windspeed ranges (low, medium, high…)  
-- `temp_bins` → temperature ranges (very low, normal, high…)  
-- `humidity_bins` → humidity ranges (low, good, high, very high)
+## 📌 Case Study Objective
+To analyze Yulu’s rental data using **Exploratory Data Analysis (EDA)** and **Hypothesis Testing** in order to:
+- Identify statistically significant factors affecting demand
+- Validate business assumptions using data
+- Provide actionable insights for operational planning
 
 ---
 
-## 🔍 EDA Highlights
+## 📎 Project Notebook
+🔗 **Google Colab:**  
+https://colab.research.google.com/github/nikhil1728/EVAnalysis/blob/main/EVAnalysis.ipynb
 
-- **Seasonal trends:** Rentals highest in **fall**, followed by **summer** and **winter**; spring has comparatively lower demand.
-- **Weather:**  
-  - Clear weather → **highest rentals**  
-  - Mist → moderate rentals  
-  - Light snow → low rentals  
-  - Heavy rain → almost **no rentals**
-- **Holidays vs non-holidays:**  
-  - Total rentals are much higher on non-holidays (more days), but averages are comparable.
-- **Working days vs non-working days:**  
-  - Total rentals on working days are ~2x non-working days, but **average demand per hour is similar**.
-- **Comfort ranges for demand:**  
-  - Temperature: **10–30°C** (normal temp bin) → highest rentals  
-  - Windspeed: **0–20 units** → highest rentals  
-  - Humidity: **30–80%** → highest rentals
-- **Outliers:**  
-  - Some high outliers in `windspeed`; **temp, atemp, humidity** are relatively well-behaved.
-- **Correlation:**  
-  - `temp` and `atemp` are **strongly positively correlated** (~0.98).
+📄 **Supporting Analysis:**  
+Detailed statistical results and interpretations are based on the attached solution PDF.
 
 ---
 
-## 🧪 Hypothesis Testing
+## 🗂 Dataset Overview
+The dataset consists of **hourly bike rental data** with demand influenced by environmental and calendar-based factors.
 
-### 1️⃣ Working Day Effect – 2-Sample t-Test
+### Key Attributes
+- `datetime` – Timestamp (hourly granularity)
+- `season` – Season (Spring, Summer, Fall, Winter)
+- `holiday` – Whether the day is a holiday
+- `workingday` – Working day indicator
+- `weather` – Weather category (clear to heavy rain)
+- `temp` – Temperature (°C)
+- `atemp` – Feels-like temperature (°C)
+- `humidity` – Humidity level
+- `windspeed` – Wind speed
+- `casual` – Casual users count
+- `registered` – Registered users count
+- `count` – Total rentals (target variable)
 
-- **H₀:** Mean rentals on working days = mean rentals on non-working days  
-- **H₁:** Mean rentals on working days ≠ mean rentals on non-working days  
-
-Using **independent 2-sample t-test**:
-
-- **p-value ≈ 0.226** (> 0.05)  
-✅ **Fail to reject H₀** → No statistically significant difference in *average* rentals between working and non-working days.
-
----
-
-### 2️⃣ Holiday Effect – 2-Sample t-Test (additional)
-
-- **H₀:** Mean rentals on holidays = mean rentals on non-holidays  
-- **H₁:** Mean rentals on holidays ≠ mean rentals on non-holidays  
-
-Result:
-
-- **p-value ≈ 0.574** (> 0.05)  
-✅ **Fail to reject H₀** → Average demand is not significantly different on holidays vs non-holidays.
+✅ No missing values in core columns
 
 ---
 
-### 3️⃣ Weather Impact – Non-Parametric Test (Kruskal–Wallis)
+## 🧪 Analytical Approach
 
-Normality and equal variance assumptions for ANOVA **do not hold** for `weather` groups, so a **Kruskal–Wallis test** is used.
-
-- **H₀:** Median rentals are the same across all weather categories  
-- **H₁:** At least one weather category has a different median rental count  
-
-Result:
-
-- **p-value ≈ 3.5e-44** (< 0.05)  
-❌ Reject H₀ → **Weather has a significant impact on rentals.**
+### 1️⃣ Exploratory Data Analysis
+- Distribution analysis of continuous variables (temp, humidity, windspeed, count)
+- Category-wise comparison for:
+  - Working day vs non-working day
+  - Weather types
+  - Seasons
+- Outlier detection and correlation analysis
 
 ---
 
-### 4️⃣ Season Impact – Non-Parametric Test (Kruskal–Wallis)
+### 2️⃣ Hypothesis Testing Framework
 
-Again, ANOVA assumptions fail for `season`, so use Kruskal–Wallis.
-
-- **H₀:** Median rentals are the same across seasons  
-- **H₁:** At least one season has a different median rental count  
-
-Result:
-
-- **p-value ≈ 2.48e-151** (< 0.05)  
-❌ Reject H₀ → **Season significantly affects rentals.**
+| Business Question | Statistical Test Used |
+|-------------------|----------------------|
+| Does working day affect demand? | 2-Sample t-Test |
+| Is demand different across seasons? | Kruskal–Wallis Test |
+| Is demand different across weather conditions? | Kruskal–Wallis Test |
+| Are season and weather related? | Chi-Square Test |
 
 ---
 
-### 5️⃣ Relationship Between Season & Weather – Chi-Square Test
+## 📊 Hypothesis Test Results
 
-- **H₀:** Season and weather are independent  
-- **H₁:** Season and weather are dependent  
-
-Performed Chi-square test on a contingency table (`season` × `weather`), excluding rare weather category 4 to avoid sparsity.
-
-- **p-value < 0.05**  
-❌ Reject H₀ → **Season and weather are dependent** (not independent).
+### ✅ Working Day vs Non-Working Day
+- **Test:** 2-Sample t-Test  
+- **Result:** No statistically significant difference in average demand  
+- **Inference:** Rentals per hour are similar on working and non-working days
 
 ---
 
-## 💡 Key Business Insights
-
-1. **Working days vs non-working days:**  
-   - Average demand is **similar**, so **cycle availability can be kept consistent** across both.
-2. **Holidays:**  
-   - No major change in average demand → **no need for drastic inventory changes** on holidays.
-3. **Weather:**  
-   - **Clear weather:** Stock **more cycles**.  
-   - **Misty conditions:** Keep **moderate inventory**.  
-   - **Heavy rain:** Demand drops sharply → **minimal cycles** needed.
-4. **Season:**  
-   - **Summer, fall, winter:** Higher demand → **stock more cycles**.  
-   - **Spring:** Slightly lower demand → **inventory can be reduced** a bit.
-5. **Comfort conditions:**  
-   - Highest demand when **temp = 10–30°C**, **windspeed = 0–20**, **humidity = 30–80%**.  
-   - These conditions can guide **demand forecasting** and **dynamic pricing/inventory planning**.
+### ✅ Holiday vs Non-Holiday
+- **Test:** 2-Sample t-Test  
+- **Result:** No significant difference  
+- **Inference:** Holidays do not drastically impact average demand
 
 ---
 
-## 🛠 Tech Stack
-
-- Python  
-- Pandas, NumPy  
-- Seaborn, Matplotlib  
-- SciPy (`ttest_ind`, `shapiro`, `levene`, `kruskal`, `chi2_contingency`)
+### ✅ Weather Impact on Demand
+- **Test:** Kruskal–Wallis (ANOVA assumptions violated)  
+- **Result:** Statistically significant difference  
+- **Inference:** Weather strongly affects electric cycle rentals
 
 ---
 
-## ✅ Outcome
+### ✅ Seasonal Impact on Demand
+- **Test:** Kruskal–Wallis  
+- **Result:** Statistically significant difference  
+- **Inference:** Demand varies meaningfully across seasons
 
-This project demonstrates how **EDA + hypothesis testing** can be used to:
+---
 
-- Quantify the impact of **season**, **weather**, and **calendar effects** on demand  
-- Validate or reject assumptions using statistical tests  
-- Provide **clear, data-backed recommendations** for inventory planning and operations for a micro-mobility platform like Yulu.
+### ✅ Season vs Weather Dependency
+- **Test:** Chi-Square Test of Independence  
+- **Result:** Season and weather are dependent  
+- **Inference:** Weather patterns change with seasons and should be jointly considered
 
+---
+
+## 💡 Key Insights
+- Electric cycle demand is **highly weather-sensitive**
+- **Clear weather and moderate temperatures (10–30°C)** drive maximum usage
+- **Summer, fall, and winter** see higher rentals than spring
+- Working days and holidays do **not** change average demand significantly
+- Wind speed and humidity have optimal comfort ranges affecting usage
+
+---
+
+## 🚀 Business Recommendations
+- Adjust fleet availability dynamically based on **weather forecasts**
+- Increase bike supply during **clear weather and peak seasons**
+- Reduce operational costs during heavy rain conditions
+- Use season–weather dependency for **better demand forecasting**
+- Maintain consistent availability across working and non-working days
+
+---
+
+## 🛠 Tools & Techniques
+- Python (Pandas, NumPy)
+- Seaborn & Matplotlib
+- SciPy (t-test, Kruskal–Wallis, Chi-square)
+- Exploratory Data Analysis
+- Statistical Hypothesis Testing
+
+---
+
+## ✅ Project Outcome
+This case study demonstrates how **statistical hypothesis testing** can convert raw operational data into **business evidence**, enabling Yulu to optimize inventory planning, improve utilization, and support revenue recovery strategies.
+
+---
+
+## 👤 Author
+**Nikhil Somisetty**  
+📅 March 2025
