@@ -23,7 +23,7 @@ To analyze Yulu’s rental data using **Exploratory Data Analysis (EDA)** and **
 
 ## 📎 Project Notebook
 🔗 **Google Colab:**  
-https://colab.research.google.com/github/nikhil1728/EVAnalysis/blob/main/EVAnalysis.ipynb
+https://colab.research.google.com/drive/1YBoh1UnQ7FbaViKt3D8CgrY6MRwOa5kH#scrollTo=bxakFiMh8ORm
 
 ---
 
